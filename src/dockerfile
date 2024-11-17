@@ -1,0 +1,22 @@
+# Use BellSoft's lightweight Liberica OpenJDK image based on Alpine
+FROM bellsoft/liberica-openjdk-alpine-musl:11
+
+# Set working directory inside the container
+WORKDIR /app
+
+# Copy all project files into the container
+COPY client/ /app/client/
+COPY server/ /app/server/
+COPY global/ /app/global/
+
+# Compile all Java source files
+RUN javac client/ClientApp.java client/MultiClientTest.java server/ServerApp.java global/KeyValueStoreInterface.java server/KeyValueStoreImpl.java -d .
+
+# Expose the RMI port for the server
+EXPOSE 1099
+
+# Use an environment variable to control whether the container runs as the client or server
+ENV SERVICE_TYPE server
+
+# Default command; will change based on SERVICE_TYPE
+CMD ["sh", "-c", "if [ \"$SERVICE_TYPE\" = 'server' ]; then java server.ServerApp; else java client.ClientApp; fi"]
