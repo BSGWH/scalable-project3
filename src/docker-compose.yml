@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  server1:
+    build: .
+    environment:
+      - SERVICE_TYPE=server
+      - SERVER_ID=1
+      - PORT=1099
+    ports:
+      - "1099:1099"
+
+  server2:
+    build: .
+    environment:
+      - SERVICE_TYPE=server
+      - SERVER_ID=2
+      - PORT=1100
+    ports:
+      - "1100:1100"
+
+  server3:
+    build: .
+    environment:
+      - SERVICE_TYPE=server
+      - SERVER_ID=3
+      - PORT=1101
+    ports:
+      - "1101:1101"
+
+  server4:
+    build: .
+    environment:
+      - SERVICE_TYPE=server
+      - SERVER_ID=4
+      - PORT=1102
+    ports:
+      - "1102:1102"
+
+  server5:
+    build: .
+    environment:
+      - SERVICE_TYPE=server
+      - SERVER_ID=5
+      - PORT=1103
+    ports:
+      - "1103:1103"
+
+  client:
+    build: .
+    environment:
+      - SERVICE_TYPE=client
+    depends_on:
+      - server1
+      - server2
+      - server3
+      - server4
+      - server5
+    network_mode: service:server1 # Use the same network namespace as server1 for simplicity

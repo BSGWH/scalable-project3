@@ -12,11 +12,13 @@ COPY global/ /app/global/
 # Compile all Java source files
 RUN javac client/ClientApp.java client/MultiClientTest.java server/ServerApp.java global/KeyValueStoreInterface.java server/KeyValueStoreImpl.java -d .
 
-# Expose the RMI port for the server
-EXPOSE 1099
+# Expose the RMI ports (dynamic for multiple servers)
+EXPOSE 1099 1100 1101 1102 1103
 
-# Use an environment variable to control whether the container runs as the client or server
-ENV SERVICE_TYPE server
+# Environment variables for dynamic configuration
+ENV SERVICE_TYPE=server
+ENV SERVER_ID=1
+ENV PORT=1099
 
-# Default command; will change based on SERVICE_TYPE
-CMD ["sh", "-c", "if [ \"$SERVICE_TYPE\" = 'server' ]; then java server.ServerApp; else java client.ClientApp; fi"]
+# Default command; runs as server or client based on SERVICE_TYPE
+CMD ["sh", "-c", "if [ \"$SERVICE_TYPE\" = 'server' ]; then java server.ServerApp $SERVER_ID $PORT; else java client.ClientApp; fi"]

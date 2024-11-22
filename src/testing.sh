@@ -3,15 +3,6 @@
 # Define the ports to be used by the servers
 ports=(1099 1100 1101 1102 1103)
 
-# Function to shut down servers gracefully
-shutdown_servers() {
-    echo "Attempting to shut down servers gracefully..."
-    for port in "${ports[@]}"; do
-        curl -X POST "http://localhost:$port/shutdown" || echo "Server on port $port not responding."
-    done
-    sleep 5
-}
-
 # Function to kill processes using specific ports
 kill_ports() {
     echo "Checking and killing processes on specified ports..."
@@ -20,17 +11,16 @@ kill_ports() {
         if [ -n "$pid" ]; then
             echo "Port $port is in use by PID $pid. Killing process..."
             kill -9 "$pid" 2>/dev/null
-            sleep 2
+            sleep 1
         else
             echo "Port $port is free."
         fi
     done
-    echo "Waiting for ports to be fully released..."
-    sleep 5
+    echo "Final port check:"
+    for port in "${ports[@]}"; do
+        lsof -i :"$port" && echo "Port $port is still in use!" || echo "Port $port is free."
+    done
 }
-
-# Shutdown servers gracefully
-shutdown_servers
 
 # Kill processes using the specified ports
 kill_ports

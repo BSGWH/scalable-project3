@@ -12,11 +12,11 @@ public class ClientApp {
         try {
             // Step 1: Define a list of server URLs
             List<String> serverUrls = Arrays.asList(
-                "rmi://localhost:1099/KeyValueStore",
-                "rmi://localhost:1100/KeyValueStore",
-                "rmi://localhost:1101/KeyValueStore",
-                "rmi://localhost:1102/KeyValueStore",
-                "rmi://localhost:1103/KeyValueStore"
+                "rmi://server1:1099/KeyValueStore",
+                "rmi://server2:1100/KeyValueStore",
+                "rmi://server3:1101/KeyValueStore",
+                "rmi://server4:1102/KeyValueStore",
+                "rmi://server5:1103/KeyValueStore"
             );
 
             // For testing with one server
